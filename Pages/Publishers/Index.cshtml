@@ -1,0 +1,58 @@
+﻿@page
+@model Pop_Claudia_Lab2.Pages.Publishers.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @if (Model.Publisher.Any())
+                {
+                    @Html.DisplayNameFor(model => model.Publisher[0].PublisherName)
+                }
+                else
+                {
+                    <span>No publishers available</span>
+                }
+            </th>
+            <th>Books</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var publisher in Model.Publisher) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => publisher.PublisherName)
+            </td>
+            <td>
+                    @if (publisher.Books != null && publisher.Books.Any())
+                    {
+                    @foreach (var book in publisher.Books)
+                    {
+                        <p>@book.Title</p> 
+                    }
+                    }
+                    else
+                    {
+                        <p>No books available</p>
+                    }
+                </td>
+                <td>
+
+                    <a asp-page="./Edit" asp-route-id="@publisher.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@publisher.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@publisher.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
