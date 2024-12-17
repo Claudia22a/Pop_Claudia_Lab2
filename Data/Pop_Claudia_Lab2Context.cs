@@ -17,6 +17,8 @@ namespace Pop_Claudia_Lab2.Data
         public DbSet<Pop_Claudia_Lab2.Models.Book> Book { get; set; } = default!;
         public DbSet<Pop_Claudia_Lab2.Models.Publisher> Publisher { get; set; } = default!;
         public DbSet<Author> Author { get; set; } = default!;
+        public DbSet<Category> Category { get; set; } = default!;
+        public DbSet<BookCategory> BookCategory { get; set; } = default!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -24,7 +26,20 @@ namespace Pop_Claudia_Lab2.Data
                 .HasOne(b => b.Author) 
                 .WithMany(a => a.Books) 
                 .HasForeignKey(b => b.AuthorID) 
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<BookCategory>()
+                .HasKey(bc => new { bc.BookID, bc.CategoryID });
+            modelBuilder.Entity<BookCategory>()
+                .HasOne(bc => bc.Book)
+                .WithMany(b => b.BookCategories)
+                .HasForeignKey(bc => bc.BookID);
+            modelBuilder.Entity<BookCategory>()
+                            .HasOne(bc => bc.Category)
+                            .WithMany(c => c.BookCategories)
+                            .HasForeignKey(bc => bc.CategoryID);
+            modelBuilder.Entity<Book>()
+            .Property(b => b.Price)
+            .HasColumnType("decimal(18, 2)");
         }
     }
 }
